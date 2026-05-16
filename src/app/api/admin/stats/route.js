@@ -1,16 +1,31 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase'
+export const dynamic = 'force-dynamic'
+import { createClient } from '@/lib/supabase-server'
 import { createAdminClient } from '@/lib/supabase-admin'
+import Razorpay from 'razorpay'
+
+const razorpay = new Razorpay({
+  key_id:     process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
+})
 
 export async function GET() {
   // Verify caller is an admin
-  const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const supabase = await createClient()
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    console.error('Stats API Auth Error:', authError)
+    return NextResponse.json({ error: 'Unauthorized', details: authError }, { status: 401 })
+  }
 
   const admin = createAdminClient()
-  const { data: profile } = await admin.from('profiles').select('is_admin').eq('id', user.id).single()
-  if (!profile?.is_admin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  const { data: profile, error: profileError } = await admin.from('profiles').select('is_admin').eq('id', user.id).single()
+  
+  if (profileError || !profile?.is_admin) {
+    console.error('Stats API Forbidden:', profileError)
+    return NextResponse.json({ error: 'Forbidden', details: profileError }, { status: 403 })
+  }
 
   const now = new Date()
   const todayStart  = new Date(now); todayStart.setHours(0, 0, 0, 0)
@@ -38,7 +53,23 @@ export async function GET() {
   ])
 
   const conversionRate = totalUsers > 0 ? ((premiumUsers / totalUsers) * 100).toFixed(1) : 0
-  const estimatedRevenue = (premiumUsers || 0) * 100
+  
+  // Fetch actual revenue from Razorpay
+  let estimatedRevenue = 0
+  try {
+    const payments = await razorpay.payments.all({
+      from: Math.floor(monthStart.getTime() / 1000), // Last 30 days
+      count: 100
+    })
+    // Sum up captured payments
+    estimatedRevenue = (payments.items || [])
+      .filter(p => p.status === 'captured')
+      .reduce((sum, p) => sum + (p.amount / 100), 0)
+  } catch (err) {
+    console.error('Razorpay fetch error:', err)
+    // Fallback to estimation if Razorpay fails
+    estimatedRevenue = (premiumUsers || 0) * 100
+  }
 
   return NextResponse.json({
     totalUsers, newToday, newWeek, newMonth,

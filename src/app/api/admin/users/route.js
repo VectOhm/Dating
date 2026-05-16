@@ -1,15 +1,24 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase'
+export const dynamic = 'force-dynamic'
+import { createClient } from '@/lib/supabase-server'
 import { createAdminClient } from '@/lib/supabase-admin'
 
 export async function GET(request) {
-  const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  const supabase = await createClient()
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    console.error('Admin API Auth Error:', authError)
+    return NextResponse.json({ error: 'Unauthorized', details: authError }, { status: 401 })
+  }
 
   const admin = createAdminClient()
-  const { data: profile } = await admin.from('profiles').select('is_admin').eq('id', user.id).single()
-  if (!profile?.is_admin) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+  const { data: profile, error: profileError } = await admin.from('profiles').select('is_admin').eq('id', user.id).single()
+  
+  if (profileError || !profile?.is_admin) {
+    console.error('Admin API Forbidden:', profileError)
+    return NextResponse.json({ error: 'Forbidden', details: profileError }, { status: 403 })
+  }
 
   const { searchParams } = new URL(request.url)
   const page   = parseInt(searchParams.get('page') || '1')
@@ -27,10 +36,18 @@ export async function GET(request) {
   const { data: users, count, error } = await query
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
-  // Get emails from auth
-  const { data: { users: authUsers } } = await admin.auth.admin.listUsers({ perPage: 1000 })
-  const emailMap = {}
-  authUsers?.forEach(u => { emailMap[u.id] = u.email })
+  // Get emails from auth (safely)
+  let emailMap = {}
+  try {
+    const { data: authData, error: authListError } = await admin.auth.admin.listUsers({ perPage: 1000 })
+    if (authListError) {
+      console.error('Auth list error:', authListError)
+    } else if (authData?.users) {
+      authData.users.forEach(u => { emailMap[u.id] = u.email })
+    }
+  } catch (err) {
+    console.error('Failed to list auth users:', err)
+  }
 
   const enriched = users.map(u => ({ ...u, email: emailMap[u.id] || '' }))
 
@@ -38,7 +55,7 @@ export async function GET(request) {
 }
 
 export async function PATCH(request) {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
