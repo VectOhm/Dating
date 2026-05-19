@@ -212,34 +212,41 @@ export default function DiscoverPage() {
       return
     }
     if (!currentUser.is_premium && !isFemale) setDailySwipesUsed(n => n + 1)
+
+    // Capture target BEFORE removing it from state
+    let target
     setProfiles(prev => {
       if (prev.length === 0) return prev
-      const target = prev[0]
-      ;(async () => {
-        const supabase = createClient()
-        await supabase.from('swipes').insert({
-          swiper_id: currentUser.id, swiped_id: target.id, direction,
-        })
-        if (direction !== 'like') return
-        const { data: theirLike } = await supabase
-          .from('swipes').select('id')
-          .eq('swiper_id', target.id).eq('swiped_id', currentUser.id).eq('direction', 'like')
-          .maybeSingle()
-        if (!theirLike) return
-        const [u1, u2] = [currentUser.id, target.id].sort()
-        const { data: newMatch } = await supabase
-          .from('matches').insert({ user1_id: u1, user2_id: u2 }).select().maybeSingle()
-        if (newMatch) {
-          setMatch({ ...newMatch, profile: target, myAvatar: currentUser.avatar_url })
-          setSidebarData(prev => [{
-            matchId: newMatch.id,
-            profile: { id: target.id, name: target.name, avatar_url: target.avatar_url },
-            lastMsg: null, isFromMe: false,
-          }, ...prev])
-        }
-      })()
+      target = prev[0]
       return prev.slice(1)
     })
+
+    // Wait one tick so target is set, then save swipe + check match
+    setTimeout(async () => {
+      if (!target) return
+      const supabase = createClient()
+      const { error } = await supabase.from('swipes').insert({
+        swiper_id: currentUser.id, swiped_id: target.id, direction,
+      })
+      if (error) { console.error('Swipe insert failed:', error.message); return }
+      if (direction !== 'like') return
+      const { data: theirLike } = await supabase
+        .from('swipes').select('id')
+        .eq('swiper_id', target.id).eq('swiped_id', currentUser.id).eq('direction', 'like')
+        .maybeSingle()
+      if (!theirLike) return
+      const [u1, u2] = [currentUser.id, target.id].sort()
+      const { data: newMatch } = await supabase
+        .from('matches').insert({ user1_id: u1, user2_id: u2 }).select().maybeSingle()
+      if (newMatch) {
+        setMatch({ ...newMatch, profile: target, myAvatar: currentUser.avatar_url })
+        setSidebarData(prev => [{
+          matchId: newMatch.id,
+          profile: { id: target.id, name: target.name, avatar_url: target.avatar_url },
+          lastMsg: null, isFromMe: false,
+        }, ...prev])
+      }
+    }, 0)
   }, [currentUser, dailySwipesUsed])
 
   function pressSwipe(dir) {
