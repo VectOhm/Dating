@@ -77,7 +77,7 @@ export default function LandingPage() {
               ))}
             </div>
             <p className="text-white/50 text-sm">
-              <span className="text-white font-bold">2,400+</span> people already matched
+              People already matched in <span className="text-white font-bold">Soro</span>
             </p>
           </div>
         </div>
