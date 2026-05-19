@@ -68,7 +68,7 @@ export default function LandingPage() {
           {/* Social proof */}
           <div className="flex items-center gap-3">
             <div className="flex -space-x-2">
-              {['Alex','Sam','Jordan','Casey','Riley'].map((n, i) => (
+              {['Priya','Arjun','Sneha','Rahul','Anjali'].map((n, i) => (
                 <div key={n} className="w-8 h-8 rounded-full border-2 border-[#0d0008] overflow-hidden"
                   style={{ zIndex: 5 - i }}>
                   <img src={`https://ui-avatars.com/api/?name=${n}&background=${['f43f5e','e11d48','be185d','9f1239','881337'][i]}&color=fff&size=64`}
@@ -91,7 +91,7 @@ export default function LandingPage() {
           {/* Card */}
           <div className="relative rounded-3xl overflow-hidden shadow-2xl" style={{ height: 480 }}>
             <img
-              src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=640&q=80"
+              src="https://images.unsplash.com/photo-1743090834072-4f70339bc917?w=640&q=80"
               alt="Profile"
               className="w-full h-full object-cover"
             />
@@ -105,8 +105,8 @@ export default function LandingPage() {
 
             {/* Info */}
             <div className="absolute bottom-0 inset-x-0 p-5">
-              <h3 className="text-white text-2xl font-black leading-none">Sofia, 24</h3>
-              <p className="text-white/60 text-sm mt-1">Designer · 3 km away</p>
+              <h3 className="text-white text-2xl font-black leading-none">Priya, 24</h3>
+              <p className="text-white/60 text-sm mt-1">Designer · 3 km away · Soro</p>
 
               {/* Action buttons */}
               <div className="flex items-center justify-center gap-3 mt-4">
@@ -133,11 +133,11 @@ export default function LandingPage() {
           {/* Floating match notification */}
           <div className="absolute -bottom-5 -left-8 flex items-center gap-3 bg-[#1a0a14] border border-white/10 rounded-2xl px-4 py-3 shadow-2xl">
             <div className="w-9 h-9 rounded-full overflow-hidden flex-shrink-0 border border-rose-500/40">
-              <img src="https://ui-avatars.com/api/?name=Marcus&background=f43f5e&color=fff&size=64" alt="" className="w-full h-full object-cover"/>
+              <img src="https://ui-avatars.com/api/?name=Arjun&background=f43f5e&color=fff&size=64" alt="" className="w-full h-full object-cover"/>
             </div>
             <div>
               <p className="text-white text-xs font-bold">It's a match!</p>
-              <p className="text-white/40 text-[11px]">You and Marcus liked each other</p>
+              <p className="text-white/40 text-[11px]">You and Arjun liked each other</p>
             </div>
           </div>
         </div>
@@ -150,10 +150,10 @@ export default function LandingPage() {
             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
           </svg>
           <h2 className="text-2xl md:text-3xl font-black mb-3">
-            Launching first in <span className="text-rose-400">your city</span>
+            Launching first in <span className="text-rose-400">Soro</span>
           </h2>
           <p className="text-white/50 text-base max-w-xl mx-auto leading-relaxed">
-            We're building city-by-city, on purpose. Your matches are people you can actually
+            We're starting right here in Soro. Your matches are people you can actually
             meet tonight — not a swipe in another timezone.
           </p>
         </div>
@@ -238,10 +238,13 @@ export default function LandingPage() {
                 </li>
               ))}
             </ul>
-            <Link href="/auth/register"
-              className="block text-center bg-gray-900 text-white font-bold py-3.5 rounded-2xl hover:bg-black transition-colors text-sm">
-              Go Premium
-            </Link>
+            <a href="https://instagram.com/YOUR_HANDLE" target="_blank" rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 to-pink-500 text-white font-bold py-3.5 rounded-2xl hover:opacity-90 transition-opacity text-sm">
+              <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+              </svg>
+              Contact Admin on Instagram
+            </a>
           </div>
 
         </div>

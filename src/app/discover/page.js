@@ -329,7 +329,7 @@ export default function DiscoverPage() {
 
         {/* Desktop sidebar header */}
         <div className="flex items-center justify-between px-4 py-3 flex-shrink-0"
-          style={{ background: 'linear-gradient(135deg,#f59e0b,#f97316,#dc2626)' }}>
+          style={{ background: 'linear-gradient(135deg,#f43f5e,#fb923c)' }}>
           <Link href="/profile" className="flex items-center gap-2.5 min-w-0">
             <img src={myAvatar}
               className="w-10 h-10 rounded-full object-cover border-2 border-white/60 hover:opacity-90 transition-opacity flex-shrink-0"
@@ -383,7 +383,7 @@ export default function DiscoverPage() {
             <Link href="/matches">
               <div className="flex items-center gap-3 px-4 py-3.5 border-b border-white/5 hover:bg-white/5 transition-colors">
                 <div className="w-12 h-12 rounded-full flex-shrink-0 flex items-center justify-center"
-                  style={{ background: 'linear-gradient(135deg,#f59e0b,#f97316)' }}>
+                  style={{ background: 'linear-gradient(135deg,#f43f5e,#fb923c)' }}>
                   <svg viewBox="0 0 24 24" className="w-6 h-6 text-white" fill="currentColor">
                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
                   </svg>
@@ -412,7 +412,7 @@ export default function DiscoverPage() {
               </div>
               <div className="flex-1 min-w-0 text-left">
                 <p className="font-bold text-sm text-gray-500">See who liked you</p>
-                <p className="text-xs text-yellow-500 font-semibold">Premium only · ₹100/week</p>
+                <p className="text-xs text-yellow-500 font-semibold">DM admin on Instagram to unlock</p>
               </div>
             </button>
           )}
@@ -721,10 +721,21 @@ export default function DiscoverPage() {
                 ))}
               </ul>
             </div>
-            <button onClick={handleUpgrade} disabled={payLoading}
-              className="w-full bg-gradient-to-r from-rose-500 to-orange-400 text-white font-bold py-3.5 rounded-2xl hover:opacity-90 transition-opacity disabled:opacity-50 text-sm mb-3">
-              {payLoading ? 'Opening payment…' : 'Upgrade to Premium — ₹100/week'}
-            </button>
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-4 mb-4 text-left">
+              <p className="text-white/70 text-xs leading-relaxed">
+                Payments are not live yet. To unlock Premium, contact the admin on Instagram and they will activate it for you manually.
+              </p>
+            </div>
+            <a
+              href="https://instagram.com/YOUR_HANDLE"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 to-pink-500 text-white font-bold py-3.5 rounded-2xl hover:opacity-90 transition-opacity text-sm mb-3">
+              <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+              </svg>
+              Contact Admin on Instagram
+            </a>
             <button onClick={() => setShowUpgrade(false)}
               className="text-gray-600 text-sm hover:text-gray-400 transition-colors">
               Maybe later
