@@ -71,9 +71,17 @@ export async function GET() {
     estimatedRevenue = (premiumUsers || 0) * 100
   }
 
+  // Recent joiners — last 30, newest first
+  const { data: recentJoiners } = await admin
+    .from('profiles')
+    .select('id, name, avatar_url, gender, created_at')
+    .order('created_at', { ascending: false })
+    .limit(30)
+
   return NextResponse.json({
     totalUsers, newToday, newWeek, newMonth,
     premiumUsers, totalMatches, swipesToday, totalSwipes,
     conversionRate, estimatedRevenue,
+    recentJoiners: recentJoiners ?? [],
   })
 }

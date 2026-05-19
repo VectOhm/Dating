@@ -174,6 +174,54 @@ export default function AdminDashboard() {
                 </div>
               </div>
             )}
+
+            {/* Recent Joiners footer */}
+            {stats?.recentJoiners?.length > 0 && (
+              <div className="mt-8 bg-white/4 border border-white/8 rounded-2xl overflow-hidden">
+                <div className="px-6 py-4 border-b border-white/8 flex items-center justify-between">
+                  <h2 className="text-sm font-bold text-white/50 uppercase tracking-wider">Recent Joiners</h2>
+                  <span className="text-white/30 text-xs">Last {stats.recentJoiners.length} signups</span>
+                </div>
+                {(() => {
+                  // Group by date label
+                  const groups = {}
+                  stats.recentJoiners.forEach(u => {
+                    const d = new Date(u.created_at)
+                    const now = new Date()
+                    const diffDays = Math.floor((now - d) / 86400000)
+                    const label = diffDays === 0 ? 'Today'
+                      : diffDays === 1 ? 'Yesterday'
+                      : d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+                    if (!groups[label]) groups[label] = []
+                    groups[label].push(u)
+                  })
+                  return Object.entries(groups).map(([day, users]) => (
+                    <div key={day} className="border-b border-white/5 last:border-0">
+                      <div className="px-6 py-2 bg-white/2">
+                        <span className="text-white/30 text-[11px] font-bold uppercase tracking-widest">{day}</span>
+                        <span className="ml-2 bg-white/8 text-white/40 text-[10px] font-bold px-1.5 py-0.5 rounded-full">{users.length}</span>
+                      </div>
+                      <div className="divide-y divide-white/5">
+                        {users.map(u => (
+                          <div key={u.id} className="flex items-center gap-3 px-6 py-2.5">
+                            <img
+                              src={u.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(u.name || '?')}&background=f43f5e&color=fff&size=64`}
+                              className="w-7 h-7 rounded-full object-cover flex-shrink-0 border border-white/10"
+                              alt=""
+                            />
+                            <span className="text-white text-sm font-semibold flex-1">{u.name || 'Unnamed'}</span>
+                            <span className="text-white/30 text-xs capitalize">{u.gender || '—'}</span>
+                            <span className="text-white/20 text-xs ml-4">
+                              {new Date(u.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))
+                })()}
+              </div>
+            )}
           </>
         )}
 
