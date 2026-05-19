@@ -34,7 +34,7 @@ export async function POST(req) {
     // Create auth user (ignore if already exists)
     const { data: authData, error: authErr } = await supabase.auth.admin.createUser({
       email,
-      password: crypto.randomUUID(),
+      password: 'Spark@fake2025',
       email_confirm: true,
     })
 
@@ -45,10 +45,12 @@ export async function POST(req) {
 
     const userId = authData?.user?.id
     if (!userId) {
-      // User already exists — look them up
+      // User already exists — look them up and reset password
       const { data: existing } = await supabase.auth.admin.listUsers()
       const found = existing?.users?.find(u => u.email === email)
       if (!found) { results.push({ name: p.name, error: 'Could not resolve user id' }); continue }
+      // Reset to known password
+      await supabase.auth.admin.updateUserById(found.id, { password: 'Spark@fake2025' })
       const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(p.name)}&background=f43f5e&color=fff&size=400&bold=true`
       await supabase.from('profiles').upsert({
         id: found.id, name: p.name, age: p.age, bio: p.bio,
@@ -57,7 +59,7 @@ export async function POST(req) {
         latitude: 21.1876 + (Math.random() - 0.5) * 0.05,
         longitude: 86.6833 + (Math.random() - 0.5) * 0.05,
       })
-      results.push({ name: p.name, status: 'upserted (existing user)' })
+      results.push({ name: p.name, status: 'upserted + password reset' })
       continue
     }
 
