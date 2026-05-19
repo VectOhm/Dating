@@ -23,7 +23,7 @@ export default function RegisterPage() {
     setSent(true)
   }
 
-  const inputCls = "w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:border-rose-500 focus:outline-none transition-colors text-white placeholder-gray-600 text-sm"
+  const inputCls = "w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl focus:border-rose-500 focus:outline-none focus:ring-2 focus:ring-rose-500/20 transition-colors text-white placeholder-white/30 text-sm"
 
   if (sent) {
     return (
@@ -43,11 +43,6 @@ export default function RegisterPage() {
           <p className="text-gray-600 text-sm mb-8">
             Click the link in the email to verify your account, then come back to complete your profile.
           </p>
-          <button
-            onClick={() => router.push('/setup')}
-            className="w-full bg-gradient-to-r from-rose-500 to-orange-400 text-white font-bold py-3.5 rounded-xl hover:opacity-90 transition-opacity">
-            Continue to set up profile →
-          </button>
           <p className="text-gray-600 text-xs mt-4">
             Didn't get it? Check spam or{' '}
             <button onClick={() => setSent(false)} className="text-rose-400 hover:text-rose-300 underline">try again</button>

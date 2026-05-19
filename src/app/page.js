@@ -159,6 +159,45 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* How it works */}
+      <section id="how" className="relative z-10 px-6 md:px-12 py-20 max-w-4xl mx-auto">
+        <div className="text-center mb-14">
+          <h2 className="text-3xl md:text-4xl font-black mb-3">How it works</h2>
+          <p className="text-white/50 text-lg">Three steps to your next match.</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+          {[
+            {
+              step: '01',
+              title: 'Create your profile',
+              desc: 'Sign up free, add your photos and a short bio. Takes less than 2 minutes.',
+              color: 'text-rose-400',
+            },
+            {
+              step: '02',
+              title: 'Swipe & discover',
+              desc: 'Browse real people nearby in Soro. Swipe right to like, left to pass.',
+              color: 'text-orange-400',
+            },
+            {
+              step: '03',
+              title: 'Match & chat',
+              desc: 'When both of you like each other, it\'s a match! Chat privately and meet up.',
+              color: 'text-emerald-400',
+            },
+          ].map((s, i) => (
+            <div key={s.step} className="relative flex flex-col items-center text-center">
+              <div className={`text-6xl font-black ${s.color} opacity-20 leading-none mb-4`}>{s.step}</div>
+              <h3 className="text-white font-black text-lg mb-2">{s.title}</h3>
+              <p className="text-white/50 text-sm leading-relaxed">{s.desc}</p>
+              {i < 2 && (
+                <div className="hidden md:block absolute top-8 right-0 translate-x-1/2 text-white/15 text-3xl select-none">→</div>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Features */}
       <section id="features" className="relative z-10 px-6 md:px-12 py-20 max-w-7xl mx-auto">
         <div className="text-center mb-14">
