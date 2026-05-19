@@ -3,6 +3,10 @@ import './globals.css'
 export const metadata = {
   title: 'Find Your Match',
   description: 'Swipe, match and chat securely.',
+  icons: {
+    icon: '/logo1.png',
+    apple: '/logo1.png',
+  },
 }
 
 export const viewport = {
