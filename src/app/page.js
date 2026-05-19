@@ -77,7 +77,7 @@ export default function LandingPage() {
               ))}
             </div>
             <p className="text-white/50 text-sm">
-              People already matched in <span className="text-white font-bold">Soro</span>
+              People already matched in <span className="text-white font-bold">Balasore</span>
             </p>
           </div>
         </div>
@@ -106,7 +106,7 @@ export default function LandingPage() {
             {/* Info */}
             <div className="absolute bottom-0 inset-x-0 p-5">
               <h3 className="text-white text-2xl font-black leading-none">Priya, 24</h3>
-              <p className="text-white/60 text-sm mt-1">Designer · 3 km away · Soro</p>
+              <p className="text-white/60 text-sm mt-1">Designer · 3 km away · Balasore</p>
 
               {/* Action buttons */}
               <div className="flex items-center justify-center gap-3 mt-4">
@@ -150,10 +150,10 @@ export default function LandingPage() {
             <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
           </svg>
           <h2 className="text-2xl md:text-3xl font-black mb-3">
-            Launching first in <span className="text-rose-400">Soro</span>
+            Launching first in <span className="text-rose-400">Balasore</span>
           </h2>
           <p className="text-white/50 text-base max-w-xl mx-auto leading-relaxed">
-            We're starting right here in Soro. Your matches are people you can actually
+            We're starting right here in Balasore. Your matches are people you can actually
             meet tonight — not a swipe in another timezone.
           </p>
         </div>
@@ -176,7 +176,7 @@ export default function LandingPage() {
             {
               step: '02',
               title: 'Swipe & discover',
-              desc: 'Browse real people nearby in Soro. Swipe right to like, left to pass.',
+              desc: 'Browse real people nearby in Balasore. Swipe right to like, left to pass.',
               color: 'text-orange-400',
             },
             {
