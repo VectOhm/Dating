@@ -727,7 +727,7 @@ export default function DiscoverPage() {
               </p>
             </div>
             <a
-              href="https://instagram.com/YOUR_HANDLE"
+              href="https://www.instagram.com/vectohm_sol?igsh=dnh4YzNxdGJiNHNq"
               target="_blank"
               rel="noopener noreferrer"
               className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 to-pink-500 text-white font-bold py-3.5 rounded-2xl hover:opacity-90 transition-opacity text-sm mb-3">
