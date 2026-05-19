@@ -216,7 +216,12 @@ export default function AdminDashboard() {
                             <img src={u.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(u.name || '?')}&background=f43f5e&color=fff&size=64`}
                               className="w-8 h-8 rounded-full object-cover flex-shrink-0" alt="" />
                             <div>
-                              <p className="font-semibold text-white leading-none">{u.name || 'Unnamed'}</p>
+                              <div className="flex items-center gap-1.5 leading-none">
+                                <p className="font-semibold text-white">{u.name || 'Unnamed'}</p>
+                                {u.email?.endsWith('@noreply.local') && (
+                                  <span className="bg-violet-500/20 text-violet-400 text-[10px] font-black px-1.5 py-0.5 rounded-full border border-violet-500/30">FAKE</span>
+                                )}
+                              </div>
                               <p className="text-white/30 text-xs mt-0.5">{u.age ? `${u.age}y` : ''} {u.gender || ''}</p>
                             </div>
                           </div>

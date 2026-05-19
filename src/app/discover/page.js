@@ -16,7 +16,7 @@ function previewMsg(content) {
   return content
 }
 
-const FREE_SWIPE_LIMIT = 20
+const FREE_SWIPE_LIMIT = 6
 
 function haversine(lat1, lon1, lat2, lon2) {
   const R = 6371
@@ -206,11 +206,12 @@ export default function DiscoverPage() {
   const handleSwipe = useCallback(async (direction) => {
     setIsSwiping(false)
     if (!currentUser) return
-    if (!currentUser.is_premium && dailySwipesUsed >= FREE_SWIPE_LIMIT) {
+    const isFemale = currentUser.gender === 'woman'
+    if (!currentUser.is_premium && !isFemale && dailySwipesUsed >= FREE_SWIPE_LIMIT) {
       setShowUpgrade(true)
       return
     }
-    if (!currentUser.is_premium) setDailySwipesUsed(n => n + 1)
+    if (!currentUser.is_premium && !isFemale) setDailySwipesUsed(n => n + 1)
     setProfiles(prev => {
       if (prev.length === 0) return prev
       const target = prev[0]
@@ -243,7 +244,8 @@ export default function DiscoverPage() {
 
   function pressSwipe(dir) {
     if (isSwiping || !profiles.length) return
-    if (!currentUser?.is_premium && dailySwipesUsed >= FREE_SWIPE_LIMIT) {
+    const isFemale = currentUser?.gender === 'woman'
+    if (!currentUser?.is_premium && !isFemale && dailySwipesUsed >= FREE_SWIPE_LIMIT) {
       setShowUpgrade(true)
       return
     }
@@ -590,8 +592,8 @@ export default function DiscoverPage() {
               </TinderBtn>
             </div>
 
-            {/* Free swipe counter */}
-            {!currentUser?.is_premium && (
+            {/* Free swipe counter — hidden for female and premium users */}
+            {!currentUser?.is_premium && currentUser?.gender !== 'woman' && (
               <p className="text-gray-700 text-[11px] mt-2 text-center">
                 {Math.max(0, FREE_SWIPE_LIMIT - dailySwipesUsed)} free swipes left today
               </p>
