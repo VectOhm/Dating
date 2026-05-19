@@ -16,7 +16,7 @@ function previewMsg(content) {
   return content
 }
 
-const FREE_SWIPE_LIMIT = 6
+const FREE_SWIPE_LIMIT = 10
 
 function haversine(lat1, lon1, lat2, lon2) {
   const R = 6371
