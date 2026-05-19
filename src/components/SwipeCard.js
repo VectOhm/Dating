@@ -11,8 +11,12 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, onViewProfil
   const startX      = useRef(0)
   const startY      = useRef(0)
   const onSwipeRef  = useRef(onSwipe)
+  const isTopRef    = useRef(isTop)
+  const cardRef     = useRef(null)
   const timerRef    = useRef(null)
+
   onSwipeRef.current = onSwipe
+  isTopRef.current   = isTop
 
   useEffect(() => {
     return () => { clearTimeout(timerRef.current) }
@@ -31,27 +35,75 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, onViewProfil
     },
   }))
 
+  // Native non-passive touch listeners — React's synthetic touch events are passive
+  // in newer versions, so preventDefault() silently fails and the browser captures
+  // the gesture before our handlers can respond on the second card.
+  useEffect(() => {
+    const el = cardRef.current
+    if (!el) return
+
+    function onTouchStart(e) {
+      if (!isTopRef.current || leavingRef.current) return
+      dragging.current = true
+      startX.current   = e.touches[0].clientX
+      startY.current   = e.touches[0].clientY
+    }
+
+    function onTouchMove(e) {
+      if (!dragging.current) return
+      e.preventDefault()
+      const dx = e.touches[0].clientX - startX.current
+      const dy = e.touches[0].clientY - startY.current
+      setPos({ x: dx, y: dy * 0.2, rotate: dx * 0.07 })
+    }
+
+    function onTouchEnd() {
+      if (!dragging.current) return
+      dragging.current = false
+      setPos(prev => {
+        if (Math.abs(prev.x) > THRESHOLD) {
+          if (leavingRef.current) return prev
+          leavingRef.current = true
+          setLeaving(true)
+          const dir = prev.x > 0 ? 'like' : 'dislike'
+          timerRef.current = setTimeout(() => onSwipeRef.current(dir), 400)
+          return { x: prev.x > 0 ? 1100 : -1100, y: 60, rotate: prev.x > 0 ? 45 : -45 }
+        }
+        return { x: 0, y: 0, rotate: 0 }
+      })
+    }
+
+    el.addEventListener('touchstart', onTouchStart, { passive: true })
+    el.addEventListener('touchmove',  onTouchMove,  { passive: false })
+    el.addEventListener('touchend',   onTouchEnd,   { passive: true })
+
+    return () => {
+      el.removeEventListener('touchstart', onTouchStart)
+      el.removeEventListener('touchmove',  onTouchMove)
+      el.removeEventListener('touchend',   onTouchEnd)
+    }
+  }, []) // empty — all values accessed via refs
+
+  // Mouse drag (desktop)
   function getXY(e) {
-    const t = e.touches ? e.touches[0] : e
-    return { x: t.clientX, y: t.clientY }
+    return { x: e.clientX, y: e.clientY }
   }
 
-  function onStart(e) {
+  function onMouseDown(e) {
     if (!isTop || leavingRef.current) return
     const { x, y } = getXY(e)
     dragging.current = true
-    startX.current = x
-    startY.current = y
+    startX.current   = x
+    startY.current   = y
   }
 
-  function onMove(e) {
+  function onMouseMove(e) {
     if (!dragging.current) return
-    if (e.cancelable) e.preventDefault()
     const { x, y } = getXY(e)
     setPos({ x: x - startX.current, y: (y - startY.current) * 0.2, rotate: (x - startX.current) * 0.07 })
   }
 
-  function onEnd() {
+  function onMouseUp() {
     if (!dragging.current) return
     dragging.current = false
     setPos(prev => {
@@ -74,6 +126,7 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, onViewProfil
 
   return (
     <div
+      ref={cardRef}
       className="absolute inset-0"
       style={{
         transform: isTop
@@ -89,13 +142,10 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, onViewProfil
         userSelect:      'none',
         touchAction:     'none',
       }}
-      onMouseDown={onStart}
-      onMouseMove={onMove}
-      onMouseUp={onEnd}
-      onMouseLeave={onEnd}
-      onTouchStart={onStart}
-      onTouchMove={onMove}
-      onTouchEnd={onEnd}
+      onMouseDown={onMouseDown}
+      onMouseMove={onMouseMove}
+      onMouseUp={onMouseUp}
+      onMouseLeave={onMouseUp}
     >
       <div className="w-full h-full rounded-[20px] overflow-hidden shadow-2xl relative bg-gray-900 select-none">
         <img
@@ -105,7 +155,6 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, onViewProfil
           draggable={false}
         />
 
-        {/* Dark gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent pointer-events-none" />
 
         {/* LIKE stamp */}
@@ -122,7 +171,6 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, onViewProfil
 
         {/* Card info */}
         <div className="absolute bottom-0 inset-x-0 p-5 pb-6 pointer-events-none">
-          {/* Name + age + info button */}
           <div className="flex items-end justify-between">
             <div>
               <div className="flex items-baseline gap-2">
@@ -141,7 +189,6 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, onSwipe, onViewProfil
                 <p className="text-white/70 text-sm leading-snug line-clamp-2 mt-1.5 max-w-[240px]">{profile.bio}</p>
               )}
             </div>
-            {/* Info button */}
             <button
               onMouseDown={e => e.stopPropagation()}
               onClick={e => { e.stopPropagation(); onViewProfile?.(profile) }}
